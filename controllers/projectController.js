@@ -2,6 +2,8 @@ var Project = require('../models/project');
 var User = require('../models/user');
 
 var async = require('async');
+const { body, validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 
 exports.index = function(req, res) {
 
@@ -54,14 +56,48 @@ exports.project_detail = function(req, res, next) {
 };
 
 // Display project create form on GET.
-exports.project_create_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Project create GET');
+exports.project_create_get = function(req, res, next) {
+
+  res.render('project_form', {
+    title: 'Create Project',
+    user: '5da57a1aac652e3520f0b04b' // Hardcoded for now. Should be currently authenticated user.
+  });
+
 };
 
 // Handle project create on POST.
-exports.project_create_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Project create POST');
-};
+exports.project_create_post = [
+  body('name', 'Name must not be empty.')
+    .isLength({ min: 1, max: 100 })
+    .trim(),
+
+  sanitizeBody('*').escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const project = new Project({
+      name: req.body.name,
+      user: req.body.user,
+      html_code: req.body.html_code,
+      css_code: req.body.css_code,
+      js_code: req.body.js_code
+    });
+
+    if (!errors.isEmpty()) {
+      res.render('project_form', {
+        name: 'Create Project',
+        project: project,
+        errors: errors.array()
+      });
+      return;
+    } else {
+      project.save(function (err) {
+        if (err) { return next(err); }
+        res.redirect(project.url);
+      });
+    }
+  }
+];
 
 // Display project delete form on GET.
 exports.project_delete_get = function(req, res) {
