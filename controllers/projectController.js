@@ -2,6 +2,7 @@ var Project = require('../models/project');
 var User = require('../models/user');
 
 var async = require('async');
+var he = require('he');
 const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
@@ -47,6 +48,11 @@ exports.project_detail = function(req, res, next) {
       err.status = 400;
       return next(err);
     }
+
+    results.project.html_code = he.decode(results.project.html_code);
+    results.project.css_code = he.decode(results.project.css_code);
+    results.project.js_code = he.decode(results.project.js_code);
+
     res.render('project_detail', {
       title: results.project.name,
       project: results.project
@@ -150,6 +156,11 @@ exports.project_update_get = function(req, res, next) {
       err.status = 404;
       return next(err);
     }
+
+    results.project.html_code = he.decode(results.project.html_code);
+    results.project.css_code = he.decode(results.project.css_code);
+    results.project.js_code = he.decode(results.project.js_code);
+
     res.render('project_form', {
       title: 'Update Project',
       project: results.project
