@@ -59,8 +59,7 @@ exports.project_detail = function(req, res, next) {
 exports.project_create_get = function(req, res, next) {
 
   res.render('project_form', {
-    title: 'Create Project',
-    user: '5da57a1aac652e3520f0b04b' // Hardcoded for now. Should be currently authenticated user.
+    title: 'Create Project'
   });
 
 };
@@ -80,7 +79,9 @@ exports.project_create_post = [
       user: req.body.user,
       html_code: req.body.html_code,
       css_code: req.body.css_code,
-      js_code: req.body.js_code
+      js_code: req.body.js_code,
+      // Hardcoded user id for now. Should be currently authenticated user.
+      user: '5da57a1aac652e3520f0b04b'
     });
 
     if (!errors.isEmpty()) {

@@ -4,7 +4,6 @@ block content
     h1= title
 
     form(method='POST' action='')
-        input(type='hidden', name='user', value=user)
         div.form-group
             label(for='name') Name:
             input#title.form-control(type='text', placeholder='Name of project' name='name' required='true' value=(undefined===project ? '' : project.name) )
