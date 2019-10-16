@@ -16,7 +16,7 @@ var ProjectSchema = new Schema(
 ProjectSchema
   .virtual('url')
   .get(function () {
-    return '/project/' + this._id;
+    return '/code/project/' + this._id;
   });
 
 //Export model
