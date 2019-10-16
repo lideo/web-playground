@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const helmet = require('helmet')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -8,6 +9,8 @@ var dotenv = require('dotenv').config();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var codeRouter = require('./routes/code');
+
+var compression = require('compression');
 
 var app = express();
 
@@ -23,6 +26,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(compression()); //Compress all routes
+app.use(helmet());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
