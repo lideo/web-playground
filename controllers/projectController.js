@@ -100,13 +100,40 @@ exports.project_create_post = [
 ];
 
 // Display project delete form on GET.
-exports.project_delete_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Project delete GET');
+exports.project_delete_get = function(req, res, next) {
+  async.parallel({
+    project: function(callback) {
+      Project.findById(req.params.id).exec(callback);
+    }
+  }, function(err, results) {
+    if (err) { return next(err); }
+    if (results.project == null) {
+      res.redirect('/code/projects');
+    }
+    res.render('project_delete', {
+      title: 'Delete Project',
+      project: results.project
+    });
+  });
 };
 
 // Handle project delete on POST.
-exports.project_delete_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Project delete POST');
+exports.project_delete_post = function(req, res, next) {
+  async.parallel({
+    project: function(callback) {
+      Project.findById(req.body.projectid).exec(callback);
+    }
+  }, function(err, results) {
+    if (err) { return next(err); }
+    if (results.project == null) {
+      res.redirect('/code/projects');
+    }
+    Project.findByIdAndRemove(req.body.projectid, function deleteProject(err) {
+      if (err) { return next(err); }
+      res.redirect('/code/projects');
+    })
+
+  });
 };
 
 // Display project update form on GET.
