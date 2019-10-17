@@ -217,6 +217,10 @@ exports.project_update_post = [
 exports.check_is_project_owner = function(req, res, next) {
   const user = req.user;
 
+  if (req.params.id == 'create') {
+    return next();
+  }
+
   async.parallel({
     project: function(callback) {
       Project.findById(req.params.id).exec(callback);
@@ -235,7 +239,7 @@ exports.check_is_project_owner = function(req, res, next) {
       return next(err);
     }
 
-    next();
+    return next();
 
   });
 }
