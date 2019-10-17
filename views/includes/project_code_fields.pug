@@ -1,13 +1,13 @@
 form(method='POST' action='')
     div.form-group
         label(for='html_code') HTML Code:
-        textarea#html_code.form-control(type='textarea', placeholder='HTML Code' name='html_code' rows='3' required='false') #{undefined===project ? '' : project.html_code}
+        textarea#html_code.form-control(type='textarea', placeholder='HTML Code' name='html_code' rows='3') #{undefined===project ? '' : project.html_code}
     div.form-group
         label(for='css_code') CSS Code:
-        textarea#css_code.form-control(type='textarea', placeholder='CSS Code' name='css_code' rows='3' required='false') #{undefined === project ? '' : project.css_code}
+        textarea#css_code.form-control(type='textarea', placeholder='CSS Code' name='css_code' rows='3') #{undefined === project ? '' : project.css_code}
     div.form-group
         label(for='js_code') JS Code:
-        textarea#js_code.form-control(type='textarea', placeholder='JS Code' name='js_code' rows='3' required='false') #{undefined === project ? '' : project.js_code}
+        textarea#js_code.form-control(type='textarea', placeholder='JS Code' name='js_code' rows='3') #{undefined === project ? '' : project.js_code}
     button.btn.btn-primary(type='submit') Submit
 
 if errors
