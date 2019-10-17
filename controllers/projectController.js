@@ -57,12 +57,39 @@ exports.project_detail = function(req, res, next) {
 
 };
 
+exports.project_detail_post = [
+    sanitizeBody('*').escape(),
+
+    (req, res, next) => {
+      const errors = validationResult(req);
+      const project = new Project({
+        html_code: req.body.html_code,
+        css_code: req.body.css_code,
+        js_code: req.body.js_code,
+        _id: req.params.id //This is required, or a new ID will be assigned!
+      });
+
+      if (!errors.isEmpty()) {
+        res.render('project_detail', {
+          title: project.name,
+          project: project,
+          errors: errors.array()
+        });
+        return;
+      } else {
+        Project.findByIdAndUpdate(req.params.id, project, {}, function(err, theproject) {
+          if (err) { return next(err); }
+          res.redirect(theproject.url);
+        });
+      }
+    }
+];
+
 // Display project create form on GET.
 exports.project_create_get = function(req, res, next) {
 
   res.render('project_form', {
-    title: 'Create Project',
-    mode: 'create'
+    title: 'Create Project'
   });
 
 };
@@ -158,9 +185,8 @@ exports.project_update_get = function(req, res, next) {
     results.project.js_code = he.decode(results.project.js_code);
 
     res.render('project_form', {
-      title: 'Update Project',
-      project: results.project,
-      mode: 'update'
+      title: 'Update Project Details',
+      project: results.project
     });
   });
 };
@@ -171,22 +197,18 @@ exports.project_update_post = [
     .isLength({ min: 1, max: 100 })
     .trim(),
 
-    sanitizeBody('*').escape(),
+    sanitizeBody('name').escape(),
 
     (req, res, next) => {
       const errors = validationResult(req);
       const project = new Project({
         name: req.body.name,
-        user: req.body.user,
-        html_code: req.body.html_code,
-        css_code: req.body.css_code,
-        js_code: req.body.js_code,
         _id: req.params.id //This is required, or a new ID will be assigned!
       });
 
       if (!errors.isEmpty()) {
         res.render('project_form', {
-          name: 'Create Project',
+          title: 'Update Project Details',
           project: project,
           errors: errors.array()
         });

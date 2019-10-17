@@ -3,11 +3,14 @@ extends layout
 block content
     h1 #{project.name}
 
-    p
+    p by
+        |&nbsp;
         a(href=project.user.url) #{project.user.full_name}
+
+    include includes/project_code_fields
 
     hr
     p
-        a(href=project.url + '/update') Edit project
+        a(href=project.url + '/update') Edit details
     p
         a.text-danger(href=project.url+'/delete') Delete project

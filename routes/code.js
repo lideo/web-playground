@@ -35,6 +35,9 @@ router.post('/project/:id/update', project_controller.project_update_post);
 // GET request for one Project.
 router.get('/project/:id', project_controller.project_detail);
 
+// POST request for one Project.
+router.post('/project/:id', project_controller.project_detail_post);
+
 // GET request for list of all Project items.
 router.get('/projects', project_controller.project_list);
 
