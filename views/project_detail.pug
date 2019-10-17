@@ -6,22 +6,8 @@ block content
     p
         a(href=project.user.url) #{project.user.full_name}
 
-    h2 Code
-
-    h3 HTML
-    textarea(name="html_code")
-        | #{project.html_code}
-
-    h3 CSS
-    textarea(name="css_code")
-        | #{project.css_code}
-
-    h3 JS
-    textarea(name="js_code")
-        | #{project.js_code}
-
     hr
     p
-        a(href=project.url+'/delete') Delete project
+        a(href=project.url + '/update') Edit project
     p
-        a(href=project.url + '/update') Update project
+        a.text-danger(href=project.url+'/delete') Delete project

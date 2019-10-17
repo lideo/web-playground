@@ -61,7 +61,8 @@ exports.project_detail = function(req, res, next) {
 exports.project_create_get = function(req, res, next) {
 
   res.render('project_form', {
-    title: 'Create Project'
+    title: 'Create Project',
+    mode: 'create'
   });
 
 };
@@ -79,9 +80,9 @@ exports.project_create_post = [
     const project = new Project({
       name: req.body.name,
       user: req.body.user,
-      html_code: req.body.html_code,
-      css_code: req.body.css_code,
-      js_code: req.body.js_code,
+      html_code: '',
+      css_code: '',
+      js_code: '',
       user: req.user.id
     });
 
@@ -158,7 +159,8 @@ exports.project_update_get = function(req, res, next) {
 
     res.render('project_form', {
       title: 'Update Project',
-      project: results.project
+      project: results.project,
+      mode: 'update'
     });
   });
 };
