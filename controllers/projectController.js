@@ -23,8 +23,6 @@ exports.project_list = function(req, res, next) {
 };
 
 exports.project_detail = function(req, res, next) {
-  const user = req.user;
-
   async.parallel({
     project: function(callback) {
       Project.findById(req.params.id)
@@ -36,12 +34,6 @@ exports.project_detail = function(req, res, next) {
     if (results.project == null) {
       const err = new Error('Project not found.');
       err.status = 404;
-      return next(err);
-    }
-
-    if (user.id != results.project.user.id) {
-      const err = new Error('Forbidden.');
-      err.status = 403;
       return next(err);
     }
 
@@ -221,3 +213,29 @@ exports.project_update_post = [
       }
     }
 ];
+
+exports.check_is_project_owner = function(req, res, next) {
+  const user = req.user;
+
+  async.parallel({
+    project: function(callback) {
+      Project.findById(req.params.id).exec(callback);
+    }
+  }, function(err, results) {
+    if (err) { return next(err); }
+    if (results.project == null) {
+      const err = new Error('Project not found.');
+      err.status = 404;
+      return next(err);
+    }
+
+    if (user.id != results.project.user) {
+      const err = new Error('Forbidden.');
+      err.status = 403;
+      return next(err);
+    }
+
+    next();
+
+  });
+}

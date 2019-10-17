@@ -5,8 +5,14 @@ const { ensureLoggedIn } = require('connect-ensure-login');
 // Require controller modules.
 const project_controller = require('../controllers/projectController');
 
-// Routes middleware to check if the user is logged in
+/// PROJECT ROUTES MIDDLEWARE ///
+
+// Check if the user is logged in
 router.use(ensureLoggedIn('/login'));
+
+// Check if project belongs to the user
+router.use('/project/:id/', project_controller.check_is_project_owner);
+
 
 /// PROJECT ROUTES ///
 
