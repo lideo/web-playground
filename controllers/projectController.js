@@ -1,25 +1,13 @@
-var Project = require('../models/project');
-var User = require('../models/user');
+const Project = require('../models/project');
+const User = require('../models/user');
 
-var async = require('async');
-var he = require('he');
+const async = require('async');
+const he = require('he');
 const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
 exports.index = function(req, res) {
-
-  async.parallel({
-    project_count: function (callback) {
-      Project.countDocuments({}, callback);
-    }
-  }, function(err, results) {
-      res.render('index', {
-        title: 'Web Playground Home',
-        error: err,
-        data: results
-      });
-  });
-
+  res.redirect('/code/projects');
 };
 
 exports.project_list = function(req, res, next) {

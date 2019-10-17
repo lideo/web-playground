@@ -1,14 +1,32 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const SALT_WORK_FACTOR = 10;
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var UserSchema = new Schema(
-  {
-    first_name: {type: String, required: true, max: 100},
-    last_name: {type: String, required: true, max: 100},
-    email: {type: String, required: true, max: 254}
+const UserSchema = new Schema({
+  first_name: {
+    type: String,
+    required: true,
+    max: 100
+  },
+  last_name: {
+    type: String,
+    required: true,
+    max: 100
+  },
+  email: {
+    type: String,
+    required: true,
+    max: 254
+  },
+  password: {
+    type: String,
+    required: true,
+    // Don't return the value of this field when getting the users details
+    select: false
   }
-);
+});
 
 // Virtual for user's full name
 UserSchema
@@ -22,5 +40,12 @@ UserSchema
   .get(function () {
     return '/user/' + this._id;
   });
+
+UserSchema.methods.verifyPassword = function(inputPassword, cb) {
+  bcrypt.compare(inputPassword, this.password, function(err, isMatch) {
+    if (err) return cb(err);
+    cb(null, isMatch);
+  });
+};
 
 module.exports = mongoose.model('User', UserSchema);

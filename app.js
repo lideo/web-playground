@@ -1,25 +1,27 @@
-var createError = require('http-errors');
-var express = require('express');
-const helmet = require('helmet')
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var dotenv = require('dotenv').config();
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const dotenv = require('dotenv').config();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var codeRouter = require('./routes/code');
+const indexRouter = require('./routes/index');
+const codeRouter = require('./routes/code');
 
-var compression = require('compression');
+const helmet = require('helmet');
+const compression = require('compression');
 
-var app = express();
+const app = express();
+
+const passport = require('./middleware/authentication');
+const session = require('./middleware/sessions')(app);
 
 //Set up mongoose connection
-var mongoose = require('mongoose');
-var mongoDB = process.env.MONGODB_URI;
+const mongoose = require('mongoose');
+const mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // view engine setup
@@ -34,8 +36,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/code', codeRouter);
 
 // catch 404 and forward to error handler

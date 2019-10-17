@@ -1,8 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const { ensureLoggedIn } = require('connect-ensure-login');
 
 // Require controller modules.
-var project_controller = require('../controllers/projectController');
+const project_controller = require('../controllers/projectController');
+
+// Routes middleware to check if the user is logged in
+router.use(ensureLoggedIn('/login'));
 
 /// PROJECT ROUTES ///
 
