@@ -17,21 +17,24 @@ html(lang='en')
               li
                 a(href='/') Home
               li
-                a(href='/code/projects') My projects
-              li
                 hr
-              li
-                a(href='/code/project/create') Create new project
-              li
-                hr
-              li
-                a(href='/login') Login
-              li
-                a(href='/logout') Logout
-              li
-                a(href='/signup') Sign up
-              li
-                a(href='/profile') Profile
+              if isAuthenticated
+                li
+                  a(href='/code/projects') My projects
+                li
+                  a(href='/code/project/create') Create new project
+                li
+                  hr
+                li
+                  a(href='/profile') Profile
+                li
+                  a(href='/logout') Logout
+              else
+                li
+                  a(href='/login') Login
+                li
+                  a(href='/signup') Sign up
+
 
         div(class='col-sm-10')
           block content

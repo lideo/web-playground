@@ -11,8 +11,9 @@ exports.index = function(req, res) {
 };
 
 exports.project_list = function(req, res, next) {
+  const user = req.user;
 
-  Project.find({}, 'name user')
+  Project.find({ user: user.id }, 'name user')
     .populate('user')
     .exec(function (err, list_projects) {
       if (err) { return next(err); }
@@ -22,6 +23,7 @@ exports.project_list = function(req, res, next) {
 };
 
 exports.project_detail = function(req, res, next) {
+  const user = req.user;
 
   async.parallel({
     project: function(callback) {
@@ -32,8 +34,14 @@ exports.project_detail = function(req, res, next) {
   }, function(err, results) {
     if (err) { return next(err); }
     if (results.project == null) {
-      var err = new Error('Project not found.');
-      err.status = 400;
+      const err = new Error('Project not found.');
+      err.status = 404;
+      return next(err);
+    }
+
+    if (user.id != results.project.user.id) {
+      const err = new Error('Forbidden.');
+      err.status = 403;
       return next(err);
     }
 
@@ -74,8 +82,7 @@ exports.project_create_post = [
       html_code: req.body.html_code,
       css_code: req.body.css_code,
       js_code: req.body.js_code,
-      // Hardcoded user id for now. Should be currently authenticated user.
-      user: '5da57a1aac652e3520f0b04b'
+      user: req.user.id
     });
 
     if (!errors.isEmpty()) {

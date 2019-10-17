@@ -5,7 +5,6 @@ const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
 exports.profile = function(req, res, next) {
-  console.log(req.user);
   res.render('profile', { user: req.user });
 }
 

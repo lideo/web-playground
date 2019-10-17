@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const { ensureLoggedIn } = require('connect-ensure-login');
+const { ensureLoggedIn, ensureLoggedOut } = require('connect-ensure-login');
 
 const user_controller = require('../controllers/userController');
 
@@ -17,7 +17,10 @@ router.get('/profile',
   user_controller.profile
 );
 
-router.get('/login', user_controller.login_get);
+router.get('/login',
+  ensureLoggedOut({ redirectTo: '/profile' }),
+  user_controller.login_get
+);
 
 router.post('/login',
   passport.authenticate('local', {
