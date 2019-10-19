@@ -3,6 +3,11 @@ extends layout
 block content
     h1 Login
 
+    if errors
+        ul
+            for error in errors
+                li!= error.msg
+
     form(method="post" action="")
         div.form-group
             label(for="username") Username:
