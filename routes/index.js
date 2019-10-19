@@ -1,9 +1,12 @@
 const express = require('express');
-const passport = require('passport');
-const router = express.Router();
 const { ensureLoggedIn, ensureLoggedOut } = require('connect-ensure-login');
 
+const router = express.Router();
+
 const user_controller = require('../controllers/userController');
+
+router.use('/login', ensureLoggedOut({ redirectTo: '/profile' }));
+router.use('/signup', ensureLoggedOut({ redirectTo: '/profile' }));
 
 // GET home page.
 router.get('/', function(req, res, next) {
@@ -17,15 +20,10 @@ router.get('/profile',
   user_controller.profile
 );
 
-router.get('/login',
-  ensureLoggedOut({ redirectTo: '/profile' }),
-  user_controller.login_get
-);
+router.get('/login', user_controller.login_get);
 
 router.post('/login',
-  passport.authenticate('local', {
-    failureRedirect: '/login'
-  }),
+  user_controller.authenticate,
   user_controller.login_post
 );
 
@@ -33,7 +31,11 @@ router.get('/logout', user_controller.logout);
 
 router.get('/signup', user_controller.signup_get);
 
-router.post('/signup', user_controller.signup_post);
+router.post('/signup',
+  user_controller.check_email_not_in_use,
+  user_controller.check_passwords_match,
+  user_controller.signup_post
+);
 
 
 module.exports = router;

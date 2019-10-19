@@ -4,3 +4,6 @@ MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER/DB_NAME?retry
 # express-session secret key.
 # Example: 4Alv76akUoHgWSFTDIchVJP5Nr0EC28pLeqbKX3xY9Zs1GMOfndRiyjBQwmuzt
 SESSION_KEY=
+
+# passport authentication hash salt rounds
+SALT_WORK_FACTOR=10
