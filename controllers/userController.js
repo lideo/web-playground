@@ -2,7 +2,7 @@ const User = require('../models/user');
 
 const passport = require('passport');
 const bcrypt = require('bcrypt');
-const saltRounds = process.env.SALT_WORK_FACTOR;
+const saltRounds = parseInt(process.env.SALT_WORK_FACTOR);
 const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
@@ -64,7 +64,7 @@ exports.signup_post = [
         user.password = hash;
         user.save(function(err) {
           if (err) { return next(err); }
-          res.redirect('/profile');
+          res.redirect('/login');
         })
       });
 
