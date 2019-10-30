@@ -10,11 +10,11 @@ exports.profile = function(req, res, next) {
   res.render('profile', { user: req.user });
 }
 
-exports.login_get = function(req, res, next) {
+exports.loginGet = function(req, res, next) {
   res.render('login');
 }
 
-exports.login_post = function(req, res, next) {
+exports.loginPost = function(req, res, next) {
   res.redirect('/profile');
 }
 
@@ -23,11 +23,11 @@ exports.logout = function(req, res, next) {
   res.redirect('/');
 }
 
-exports.signup_get = function(req, res, next) {
+exports.signupGet = function(req, res, next) {
   res.render('signup', { title: 'Sign Up'});
 }
 
-exports.signup_post = [
+exports.signupPost = [
   body('first_name', 'First Name must not be empty.')
     .isLength({ min: 1, max: 100 }).withMessage('First Name must be between 1 and 100 characters long.')
     .trim(),
@@ -76,7 +76,7 @@ exports.authenticate = passport.authenticate('local', {
   failureRedirect: '/login'
 });
 
-exports.check_email_not_in_use = body('email').custom(value => {
+exports.checkEmailNotInUse = body('email').custom(value => {
   return User.findOne({ email: value }).then(user => {
     if (user) {
       return Promise.reject('E-mail already in use.');
@@ -84,7 +84,7 @@ exports.check_email_not_in_use = body('email').custom(value => {
   });
 });
 
-exports.check_passwords_match = body('password_repeat').custom((value, { req }) => {
+exports.checkPasswordsMatch = body('password_repeat').custom((value, { req }) => {
   if (value !== req.body.password) {
     throw new Error('Password confirmation does not match password');
   }

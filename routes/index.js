@@ -3,7 +3,7 @@ const { ensureLoggedIn, ensureLoggedOut } = require('connect-ensure-login');
 
 const router = express.Router();
 
-const user_controller = require('../controllers/userController');
+const userController = require('../controllers/userController');
 
 router.use('/login', ensureLoggedOut({ redirectTo: '/profile' }));
 router.use('/signup', ensureLoggedOut({ redirectTo: '/profile' }));
@@ -17,24 +17,24 @@ router.get('/', function(req, res, next) {
 
 router.get('/profile',
   ensureLoggedIn('/login'),
-  user_controller.profile
+  userController.profile
 );
 
-router.get('/login', user_controller.login_get);
+router.get('/login', userController.loginGet);
 
 router.post('/login',
-  user_controller.authenticate,
-  user_controller.login_post
+  userController.authenticate,
+  userController.loginPost
 );
 
-router.get('/logout', user_controller.logout);
+router.get('/logout', userController.logout);
 
-router.get('/signup', user_controller.signup_get);
+router.get('/signup', userController.signupGet);
 
 router.post('/signup',
-  user_controller.check_email_not_in_use,
-  user_controller.check_passwords_match,
-  user_controller.signup_post
+  userController.checkEmailNotInUse,
+  userController.checkPasswordsMatch,
+  userController.signupPost
 );
 
 

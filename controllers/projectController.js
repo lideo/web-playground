@@ -10,19 +10,19 @@ exports.index = function(req, res) {
   res.redirect('/code/projects');
 };
 
-exports.project_list = function(req, res, next) {
+exports.projectList = function(req, res, next) {
   const user = req.user;
 
   Project.find({ user: user.id }, 'name user')
     .populate('user')
-    .exec(function (err, list_projects) {
+    .exec(function (err, projectList) {
       if (err) { return next(err); }
-      res.render('project_list', { title: 'Project list', project_list: list_projects });
+      res.render('projectList', { title: 'Project list', projectList: projectList });
     });
 
 };
 
-exports.project_detail = function(req, res, next) {
+exports.projectDetail = function(req, res, next) {
   async.parallel({
     project: function(callback) {
       Project.findById(req.params.id)
@@ -41,7 +41,7 @@ exports.project_detail = function(req, res, next) {
     results.project.css_code = he.decode(results.project.css_code);
     results.project.js_code = he.decode(results.project.js_code);
 
-    res.render('project_detail', {
+    res.render('projectDetail', {
       title: results.project.name,
       project: results.project
     });
@@ -49,7 +49,7 @@ exports.project_detail = function(req, res, next) {
 
 };
 
-exports.project_detail_post = [
+exports.projectDetailPost = [
     sanitizeBody('*').escape(),
 
     (req, res, next) => {
@@ -62,7 +62,7 @@ exports.project_detail_post = [
       });
 
       if (!errors.isEmpty()) {
-        res.render('project_detail', {
+        res.render('projectDetail', {
           title: project.name,
           project: project,
           errors: errors.array()
@@ -78,16 +78,16 @@ exports.project_detail_post = [
 ];
 
 // Display project create form on GET.
-exports.project_create_get = function(req, res, next) {
+exports.projectCreateGet = function(req, res, next) {
 
-  res.render('project_form', {
+  res.render('projectForm', {
     title: 'Create Project'
   });
 
 };
 
 // Handle project create on POST.
-exports.project_create_post = [
+exports.projectCreatePost = [
   body('name', 'Name must not be empty.')
     .isLength({ min: 1, max: 100 })
     .trim(),
@@ -106,7 +106,7 @@ exports.project_create_post = [
     });
 
     if (!errors.isEmpty()) {
-      res.render('project_form', {
+      res.render('projectForm', {
         name: 'Create Project',
         project: project,
         errors: errors.array()
@@ -122,7 +122,7 @@ exports.project_create_post = [
 ];
 
 // Display project delete form on GET.
-exports.project_delete_get = function(req, res, next) {
+exports.projectDeleteGet = function(req, res, next) {
   async.parallel({
     project: function(callback) {
       Project.findById(req.params.id).exec(callback);
@@ -132,7 +132,7 @@ exports.project_delete_get = function(req, res, next) {
     if (results.project == null) {
       res.redirect('/code/projects');
     }
-    res.render('project_delete', {
+    res.render('projectDelete', {
       title: 'Delete Project',
       project: results.project
     });
@@ -140,7 +140,7 @@ exports.project_delete_get = function(req, res, next) {
 };
 
 // Handle project delete on POST.
-exports.project_delete_post = function(req, res, next) {
+exports.projectDeletePost = function(req, res, next) {
   async.parallel({
     project: function(callback) {
       Project.findById(req.body.projectid).exec(callback);
@@ -159,7 +159,7 @@ exports.project_delete_post = function(req, res, next) {
 };
 
 // Display project update form on GET.
-exports.project_update_get = function(req, res, next) {
+exports.projectUpdateGet = function(req, res, next) {
   async.parallel({
     project: function(callback) {
       Project.findById(req.params.id).exec(callback);
@@ -176,7 +176,7 @@ exports.project_update_get = function(req, res, next) {
     results.project.css_code = he.decode(results.project.css_code);
     results.project.js_code = he.decode(results.project.js_code);
 
-    res.render('project_form', {
+    res.render('projectForm', {
       title: 'Update Project Details',
       project: results.project
     });
@@ -184,7 +184,7 @@ exports.project_update_get = function(req, res, next) {
 };
 
 // Handle project update on POST.
-exports.project_update_post = [
+exports.projectUpdatePost = [
   body('name', 'Name must not be empty.')
     .isLength({ min: 1, max: 100 })
     .trim(),
@@ -199,7 +199,7 @@ exports.project_update_post = [
       });
 
       if (!errors.isEmpty()) {
-        res.render('project_form', {
+        res.render('projectForm', {
           title: 'Update Project Details',
           project: project,
           errors: errors.array()
@@ -214,7 +214,7 @@ exports.project_update_post = [
     }
 ];
 
-exports.check_is_project_owner = function(req, res, next) {
+exports.checkIsProjectOwner = function(req, res, next) {
   const user = req.user;
 
   if (req.params.id == 'create') {
