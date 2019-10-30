@@ -7,11 +7,11 @@ const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
 exports.profile = function(req, res, next) {
-  res.render('profile', { user: req.user });
+  res.render('user/profile', { user: req.user });
 }
 
 exports.loginGet = function(req, res, next) {
-  res.render('login');
+  res.render('user/login');
 }
 
 exports.loginPost = function(req, res, next) {
@@ -24,7 +24,7 @@ exports.logout = function(req, res, next) {
 }
 
 exports.signupGet = function(req, res, next) {
-  res.render('signup', { title: 'Sign Up'});
+  res.render('user/signup', { title: 'Sign Up'});
 }
 
 exports.signupPost = [
@@ -53,7 +53,7 @@ exports.signupPost = [
     });
 
     if (!errors.isEmpty()) {
-      res.render('signup', {
+      res.render('user/signup', {
         title: 'Sign Up',
         user: user,
         errors: errors.array()

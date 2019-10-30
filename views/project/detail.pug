@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
     h1 #{project.name}
@@ -7,7 +7,7 @@ block content
         |&nbsp;
         a(href=project.user.url) #{project.user.full_name}
 
-    include includes/projectCodeFields
+    include ../includes/projectCodeFields
 
     hr
     p

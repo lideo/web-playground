@@ -17,7 +17,7 @@ exports.projectList = function(req, res, next) {
     .populate('user')
     .exec(function (err, projectList) {
       if (err) { return next(err); }
-      res.render('projectList', { title: 'Project list', projectList: projectList });
+      res.render('project/list', { title: 'Project list', projectList: projectList });
     });
 
 };
@@ -41,7 +41,7 @@ exports.projectDetail = function(req, res, next) {
     results.project.css_code = he.decode(results.project.css_code);
     results.project.js_code = he.decode(results.project.js_code);
 
-    res.render('projectDetail', {
+    res.render('project/detail', {
       title: results.project.name,
       project: results.project
     });
@@ -62,7 +62,7 @@ exports.projectDetailPost = [
       });
 
       if (!errors.isEmpty()) {
-        res.render('projectDetail', {
+        res.render('project/detail', {
           title: project.name,
           project: project,
           errors: errors.array()
@@ -80,7 +80,7 @@ exports.projectDetailPost = [
 // Display project create form on GET.
 exports.projectCreateGet = function(req, res, next) {
 
-  res.render('projectForm', {
+  res.render('project/form', {
     title: 'Create Project'
   });
 
@@ -106,7 +106,7 @@ exports.projectCreatePost = [
     });
 
     if (!errors.isEmpty()) {
-      res.render('projectForm', {
+      res.render('project/form', {
         name: 'Create Project',
         project: project,
         errors: errors.array()
@@ -132,7 +132,7 @@ exports.projectDeleteGet = function(req, res, next) {
     if (results.project == null) {
       res.redirect('/code/projects');
     }
-    res.render('projectDelete', {
+    res.render('project/delete', {
       title: 'Delete Project',
       project: results.project
     });
@@ -176,7 +176,7 @@ exports.projectUpdateGet = function(req, res, next) {
     results.project.css_code = he.decode(results.project.css_code);
     results.project.js_code = he.decode(results.project.js_code);
 
-    res.render('projectForm', {
+    res.render('project/form', {
       title: 'Update Project Details',
       project: results.project
     });
@@ -199,7 +199,7 @@ exports.projectUpdatePost = [
       });
 
       if (!errors.isEmpty()) {
-        res.render('projectForm', {
+        res.render('project/form', {
           title: 'Update Project Details',
           project: project,
           errors: errors.array()
