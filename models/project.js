@@ -12,7 +12,7 @@ var ProjectSchema = new Schema(
   }
 );
 
-// Virtual for author's URL
+// Virtual for project URL
 ProjectSchema
   .virtual('url')
   .get(function () {
