@@ -1,7 +1,5 @@
 const Project = require('../models/project');
-const User = require('../models/user');
 
-const async = require('async');
 const he = require('he');
 const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
@@ -10,48 +8,59 @@ exports.index = function(req, res) {
   res.redirect('/code/projects');
 };
 
-exports.projectList = function(req, res, next) {
+exports.projectList = async function(req, res, next) {
   const user = req.user;
 
-  Project.find({ user: user.id }, 'name user')
-    .populate('user')
-    .exec(function (err, projectList) {
-      if (err) { return next(err); }
-      res.render('project/list', { title: 'Project list', projectList: projectList });
+  const projectList = await Project
+    .find({ user: user.id }, 'name')
+    .sort({ name: 'ascending' })
+    .exec();
+
+  try {
+    res.render('project/list', {
+      title: 'Project list',
+      projectList: projectList
     });
+
+  } catch (err) {
+    return next(err);
+  }
 
 };
 
-exports.projectDetail = function(req, res, next) {
-  async.parallel({
-    project: function(callback) {
-      Project.findById(req.params.id)
-        .populate('user')
-        .exec(callback);
-    }
-  }, function(err, results) {
-    if (err) { return next(err); }
-    if (results.project == null) {
+exports.projectDetail = async function(req, res, next) {
+  try {
+    const project = await Project
+      .findById(req.params.id)
+      .populate('user')
+      .exec();
+
+    if (project == null) {
       const err = new Error('Project not found.');
-      err.status = 404;
+      err.code = 404;
       return next(err);
     }
 
-    results.project.html_code = he.decode(results.project.html_code);
-    results.project.css_code = he.decode(results.project.css_code);
-    results.project.js_code = he.decode(results.project.js_code);
+    project.html_code = he.decode(project.html_code);
+    project.css_code = he.decode(project.css_code);
+    project.js_code = he.decode(project.js_code);
 
     res.render('project/detail', {
-      title: results.project.name,
-      project: results.project
+      title: project.name,
+      project: project
     });
-  });
+
+  } catch (err) {
+    return next(err);
+  }
 
 };
 
 exports.projectPreview = async function(req, res, next) {
   try {
-    const project = await Project.findById(req.params.id).exec();
+    const project = await Project
+      .findById(req.params.id)
+      .exec();
 
     if (project == null) {
       const err = new Error('Project not found.');
@@ -59,15 +68,17 @@ exports.projectPreview = async function(req, res, next) {
       return next(err);
     }
 
+    project.html_code = he.decode(project.html_code);
+    project.css_code = he.decode(project.css_code);
+    project.js_code = he.decode(project.js_code);
+
     res.render('project/preview', {
       title: `${project.name} preview`,
-      htmlCode: he.decode(project.html_code),
-      cssCode: he.decode(project.css_code),
-      jsCode: he.decode(project.js_code)
+      project: project
     });
 
-  } catch(err) {
-    if (err) { return next(err); }
+  } catch (err) {
+    return next(err);
   }
 
 };
@@ -75,7 +86,7 @@ exports.projectPreview = async function(req, res, next) {
 exports.projectDetailPost = [
     sanitizeBody('*').escape(),
 
-    (req, res, next) => {
+    async (req, res, next) => {
       const errors = validationResult(req);
       const project = new Project({
         html_code: req.body.html_code,
@@ -85,17 +96,32 @@ exports.projectDetailPost = [
       });
 
       if (!errors.isEmpty()) {
+
         res.render('project/detail', {
           title: project.name,
           project: project,
           errors: errors.array()
         });
         return;
+
       } else {
-        Project.findByIdAndUpdate(req.params.id, project, {}, function(err, theproject) {
-          if (err) { return next(err); }
-          res.redirect(theproject.url);
-        });
+
+        try {
+          const updatedProject = await Project
+            .findByIdAndUpdate(req.params.id, project, { new: true })
+            .exec();
+
+          if (updatedProject == null) {
+            const err = new Error('Project not found.');
+            err.status = 404;
+            return next(err);
+          }
+
+          res.redirect(updatedProject.url);
+
+        } catch (err) {
+          return next(err);
+        }
       }
     }
 ];
@@ -117,7 +143,7 @@ exports.projectCreatePost = [
 
   sanitizeBody('*').escape(),
 
-  (req, res, next) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
     const project = new Project({
       name: req.body.name,
@@ -129,81 +155,97 @@ exports.projectCreatePost = [
     });
 
     if (!errors.isEmpty()) {
+
       res.render('project/form', {
         name: 'Create Project',
         project: project,
         errors: errors.array()
       });
       return;
+
     } else {
-      project.save(function (err) {
-        if (err) { return next(err); }
-        res.redirect(project.url);
-      });
+      try {
+        const newProject = await project.save();
+
+        if (newProject == null) {
+          const err = new Error('Project not found.');
+          err.status = 404;
+          return next(err);
+        }
+
+        res.redirect(newProject.url);
+
+      } catch (err) {
+        return next(err);
+      }
     }
   }
 ];
 
 // Display project delete form on GET.
-exports.projectDeleteGet = function(req, res, next) {
-  async.parallel({
-    project: function(callback) {
-      Project.findById(req.params.id).exec(callback);
-    }
-  }, function(err, results) {
-    if (err) { return next(err); }
-    if (results.project == null) {
-      res.redirect('/code/projects');
-    }
-    res.render('project/delete', {
-      title: 'Delete Project',
-      project: results.project
-    });
-  });
-};
+exports.projectDeleteGet = async function(req, res, next) {
+  try {
+    const project = await Project
+      .findById(req.params.id)
+      .exec();
 
-// Handle project delete on POST.
-exports.projectDeletePost = function(req, res, next) {
-  async.parallel({
-    project: function(callback) {
-      Project.findById(req.body.projectid).exec(callback);
-    }
-  }, function(err, results) {
-    if (err) { return next(err); }
-    if (results.project == null) {
-      res.redirect('/code/projects');
-    }
-    Project.findByIdAndRemove(req.body.projectid, function deleteProject(err) {
-      if (err) { return next(err); }
-      res.redirect('/code/projects');
-    })
-
-  });
-};
-
-// Display project update form on GET.
-exports.projectUpdateGet = function(req, res, next) {
-  async.parallel({
-    project: function(callback) {
-      Project.findById(req.params.id).exec(callback);
-    }
-  }, function(err, results) {
-    if (err) { return next(err); }
-    if (results.project == null) {
+    if (project == null) {
       const err = new Error('Project not found.');
       err.status = 404;
       return next(err);
     }
 
-    results.project.html_code = he.decode(results.project.html_code);
-    results.project.css_code = he.decode(results.project.css_code);
-    results.project.js_code = he.decode(results.project.js_code);
+    res.render('project/delete', {
+      title: 'Delete Project',
+      project: project
+    });
+
+  } catch (err) {
+    return next(err);
+  }
+
+};
+
+// Handle project delete on POST.
+exports.projectDeletePost = async function(req, res, next) {
+  try {
+    const project = await Project
+      .findByIdAndRemove(req.body.projectid)
+      .exec();
+
+    res.redirect('/code/projects');
+
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// Display project update form on GET.
+exports.projectUpdateGet = async function(req, res, next) {
+  try {
+    const project = await Project
+      .findById(req.params.id)
+      .exec();
+
+    if (project == null) {
+      const err = new Error('Project not found.');
+      err.status = 404;
+      return next(err);
+    }
+
+    project.html_code = he.decode(project.html_code);
+    project.css_code = he.decode(project.css_code);
+    project.js_code = he.decode(project.js_code);
 
     res.render('project/form', {
       title: 'Update Project Details',
-      project: results.project
+      project: project
     });
-  });
+
+  } catch (err) {
+    return next(err);
+  }
+
 };
 
 // Handle project update on POST.
@@ -214,7 +256,7 @@ exports.projectUpdatePost = [
 
     sanitizeBody('name').escape(),
 
-    (req, res, next) => {
+    async (req, res, next) => {
       const errors = validationResult(req);
       const project = new Project({
         name: req.body.name,
@@ -229,40 +271,54 @@ exports.projectUpdatePost = [
         });
         return;
       } else {
-        Project.findByIdAndUpdate(req.params.id, project, {}, function(err, theproject) {
-          if (err) { return next(err); }
-          res.redirect(theproject.url);
-        });
+        try {
+
+          const updatedProject = await Project
+            .findByIdAndUpdate(req.params.id, project, {new: true})
+            .exec();
+
+          if (updatedProject == null) {
+            const err = new Error('Project not found.');
+            err.status = 404;
+            return next(err);
+          }
+
+          res.redirect(updatedProject.url);
+
+        } catch (err) {
+          return next(err);
+        }
       }
     }
 ];
 
-exports.checkIsProjectOwner = function(req, res, next) {
+exports.checkIsProjectOwner = async function(req, res, next) {
   const user = req.user;
 
   if (req.params.id == 'create') {
     return next();
   }
 
-  async.parallel({
-    project: function(callback) {
-      Project.findById(req.params.id).exec(callback);
-    }
-  }, function(err, results) {
-    if (err) { return next(err); }
-    if (results.project == null) {
-      const err = new Error('Project not found.');
-      err.status = 404;
-      return next(err);
-    }
+  try {
+    const project = await Project
+      .findById(req.params.id)
+      .exec();
 
-    if (user.id != results.project.user) {
-      const err = new Error('Forbidden.');
-      err.status = 403;
-      return next(err);
-    }
+      if (project == null) {
+        const err = new Error('Project not found.');
+        err.status = 404;
+        return next(err);
+      }
+
+      if (user.id != project.user) {
+        const err = new Error('Forbidden.');
+        err.status = 403;
+        return next(err);
+      }
 
     return next();
 
-  });
+  } catch (err) {
+    return next(err);
+  }
 }
