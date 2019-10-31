@@ -38,6 +38,9 @@ router.get('/project/:id/update', projectController.projectUpdateGet);
 // POST request to update Project.
 router.post('/project/:id/update', projectController.projectUpdatePost);
 
+// GET request for project preview content.
+router.get('/project/:id/preview', projectController.projectPreview);
+
 // GET request for one Project.
 router.get('/project/:id', projectController.projectDetail);
 

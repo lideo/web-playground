@@ -49,6 +49,29 @@ exports.projectDetail = function(req, res, next) {
 
 };
 
+exports.projectPreview = async function(req, res, next) {
+  try {
+    const project = await Project.findById(req.params.id).exec();
+
+    if (project == null) {
+      const err = new Error('Project not found.');
+      err.status = 404;
+      return next(err);
+    }
+
+    res.render('project/preview', {
+      title: `${project.name} preview`,
+      htmlCode: he.decode(project.html_code),
+      cssCode: he.decode(project.css_code),
+      jsCode: he.decode(project.js_code)
+    });
+
+  } catch(err) {
+    if (err) { return next(err); }
+  }
+
+};
+
 exports.projectDetailPost = [
     sanitizeBody('*').escape(),
 

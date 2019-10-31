@@ -1,10 +1,10 @@
+if errors
+    ul
+        for error in errors
+            li!= error.msg
+
 form(method='POST' action='')
     div.form-group
         label(for='name') Name:
         input#title.form-control(type='text', placeholder='Name of project' name='name' required='true' value=(undefined===project ? '' : project.name) )
     button.btn.btn-primary(type='submit') Submit
-
-if errors
-    ul
-        for error in errors
-            li!= error.msg

@@ -19,5 +19,12 @@ ProjectSchema
     return '/code/project/' + this._id;
   });
 
+// Virtual for project preview page
+ProjectSchema
+  .virtual('previewUrl')
+  .get(function () {
+    return '/code/project/' + this._id + '/preview';
+  });
+
 //Export model
 module.exports = mongoose.model('Project', ProjectSchema);
