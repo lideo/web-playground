@@ -50,6 +50,13 @@ app.use(function(req, res, next) {
   res.locals.isAuthenticated = req.isAuthenticated();
   next();
 });
+
+app.use("/favicon.ico", function(req, res) {
+  res.type("image/x-icon");
+  res.status(301);
+  res.end();
+});
+
 app.use("/", indexRouter);
 app.use("/code", codeRouter);
 
