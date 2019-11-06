@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const Schema = mongoose.Schema;
 
@@ -28,17 +28,13 @@ const UserSchema = new Schema({
 });
 
 // Virtual for user's full name
-UserSchema
-  .virtual('full_name')
-  .get(function () {
-    return this.first_name + ' ' + this.last_name;
-  });
+UserSchema.virtual("full_name").get(function() {
+  return this.first_name + " " + this.last_name;
+});
 
-UserSchema
-  .virtual('url')
-  .get(function () {
-    return '/user/' + this._id;
-  });
+UserSchema.virtual("url").get(function() {
+  return "/user/" + this._id;
+});
 
 UserSchema.methods.verifyPassword = function(inputPassword, cb) {
   bcrypt.compare(inputPassword, this.password, function(err, isMatch) {
@@ -47,4 +43,4 @@ UserSchema.methods.verifyPassword = function(inputPassword, cb) {
   });
 };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);
