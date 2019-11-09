@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-2">
+        {% block sidebar %}
+          <li><a href="/">Home</a></li>
+          <li>
+            <hr>
+          </li>
+          {%  if isAuthenticated %}
+          <li><a href="/code/projects">My projects</a></li>
+          <li><a href="/code/project/create">Create new project</a></li>
+          <li>
+            <hr>
+          </li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/logout">Log out</a></li>
+          {% else %}
+          <li><a href="/login">Log in</a></li>
+          <li><a href="/signup">Sign up</a></li>
+          {% endif %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-10">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

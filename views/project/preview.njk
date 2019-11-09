@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style type="text/css">
+        {{ project.css_code | safe }}
+    </style>
+</head>
+<body>
+    {{ project.html_code | safe }}
+
+    <script>
+      {{ project.js_code | safe }}
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+    <h1>{{ project.name }}</h1>
+    <p>by <a href="{{ project.user.url }}">{{ project.user.full_name }}</a></p>
+
+    {% include "../includes/projectCodeFields.njk" %}
+
+    <hr>
+    <p>
+        <a href="{{ project.url + '/update' }}">Edit details</a>
+        | <a href="{{ project.url + '/delete' }}" class="text-danger">Delete project</a>
+    </p>
+{% endblock %}

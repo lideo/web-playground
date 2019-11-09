@@ -1,0 +1,16 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+    <h1>{{ title }}: {{ project.name }}</h1>
+
+    <p>Do you really want to delete this Project?</p>
+
+    <form method="post" action="">
+        <div class="form-group">
+            <input type="hidden" id="projectid" class="form-control" name="projectid" required="true" value={{ project._id }} >
+        </div>
+
+        <button class="btn btn-primary" type="submit">Delete</button>
+    </form>
+
+{% endblock %}

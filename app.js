@@ -16,6 +16,8 @@ const codeRouter = require("./routes/code");
 const helmet = require("helmet");
 const compression = require("compression");
 
+const nunjucks = require("nunjucks");
+
 const app = express();
 
 //Set up mongoose connection
@@ -29,9 +31,15 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 const passport = require("./middleware/authentication");
 const session = require("./middleware/sessions")(app, db);
 
+// Congigure nunjucks templating engine
+nunjucks.configure("views", {
+  autoescape: true,
+  express: app
+});
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "pug");
+app.set("view engine", "njk");
 
 app.use(compression()); //Compress all routes
 app.use(helmet()); // Security
