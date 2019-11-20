@@ -1,16 +1,13 @@
-{% extends "layout.njk" %}
+{% extends "layout/main.njk" %}
 
 {% block content %}
-    <h1>{{ title }}: {{ project.name }}</h1>
+    <h1 class="title">{{ title }}: {{ project.name }}</h1>
 
-    <p>Do you really want to delete this Project?</p>
+    <p>Do you really want to delete this project?</p>
 
     <form method="post" action="">
-        <div class="form-group">
-            <input type="hidden" id="projectid" class="form-control" name="projectid" required="true" value={{ project._id }} >
-        </div>
-
-        <button class="btn btn-primary" type="submit">Delete</button>
+        <input type="hidden" name="projectid" value={{ project._id }}>
+        <button class="button is-danger" type="submit">Delete</button>
     </form>
 
 {% endblock %}

@@ -1,14 +1,39 @@
-{% extends "layout.njk" %}
+{% extends "layout/main.njk" %}
 
 {% block content %}
-    <h1>{{ project.name }}</h1>
-    <p>by <a href="{{ project.user.url }}">{{ project.user.full_name }}</a></p>
+    <h1 class="title">{{ title }}</h1>
+    <p class="subtitle">by <a href="{{ project.user.url }}">{{ project.user.full_name }}</a></p>
 
-    {% include "../includes/projectCodeFields.njk" %}
+    {% include "../includes/form-errors.njk" %}
 
-    <hr>
-    <p>
-        <a href="{{ project.url + '/update' }}">Edit details</a>
-        | <a href="{{ project.url + '/delete' }}" class="text-danger">Delete project</a>
-    </p>
+    <form method="post" action="">
+        <div class="buttons">
+            <button class="button is-primary is-small" type="submit">Save</button>
+        </div>
+
+        <div class="columns">
+            <div class="column">
+                <div class="tabs">
+                    <ul>
+                        <li class="is-active"><a>HTML</a></li>
+                        <li><a>CSS</a></li>
+                        <li><a>JavaScript</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <textarea name="html_code" id="html_code">{{ project.html_code if undefined !== project }}</textarea>
+                </div>
+                <div class="tab-content">
+                    <textarea name="css_code" id="css_code">{{ project.css_code if undefined !== project }}</textarea>
+                </div>
+                <div class="tab-content">
+                    <textarea name="js_code" id="js_code">{{ project.js_code if undefined !== project }}</textarea>
+                </div>
+            </div>
+            <div class="column">
+                <iframe src={{ project.previewUrl }} width="100%" height="400px"></iframe>
+            </div>
+        </div>
+    </form>
+
 {% endblock %}

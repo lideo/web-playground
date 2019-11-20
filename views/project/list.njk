@@ -1,13 +1,42 @@
-{% extends "layout.njk" %}
+{% extends "layout/main.njk" %}
 
 {% block content %}
-    <h1>{{ title }}</h1>
+    <h1 class="title">{{ title }}</h1>
 
-    <ul>
+    <div class="columns">
         {% for project in projectList %}
-            <li><a href="{{ project.url }}">{{ project.name }}</a></li>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        <h2 class="title">
+                            {{ project.name }}
+                        </h2>
+                        <p class="subtitle">
+
+                        </p>
+                    </div>
+                    <footer class="card-footer">
+                        <p class="card-footer-item">
+                          <span>
+                              <a href="{{ project.url }}">View</a>
+                          </span>
+                        </p>
+                        <p class="card-footer-item">
+                          <span>
+                              <a href="{{ project.url + '/update' }}">Edit details</a>
+                          </span>
+                        </p>
+                        <p class="card-footer-item">
+                          <span>
+                              <a href="{{ project.url + '/delete' }}">Delete</a>
+                          </span>
+                        </p>
+                    </footer>
+                </div>
+            </div>
+
         {% else %}
-            <li>There are no projects.</li>
+            <p>There are no projects.</p>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

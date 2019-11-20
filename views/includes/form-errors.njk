@@ -1,0 +1,9 @@
+{% if errors %}
+    <div class="content notification is-danger">
+        <ul>
+            {% for error in errors %}
+                <li>{{ error.msg }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

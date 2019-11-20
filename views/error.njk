@@ -1,7 +1,7 @@
-{% extends "layout.njk" %}
+{% extends "layout/main.njk" %}
 
 {% block content %}
-  <h1>{{ message }}</h1>
-  <h2>{{ error.status }}</h2>
-  <pre>{{ error.stack }}</pre>
+    <h1 class="title">{{ message }}</h1>
+    <p class="subtitle">{{ error.status }}</p>
+    <pre>{{ error.stack }}</pre>
 {% endblock %}

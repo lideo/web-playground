@@ -11,7 +11,7 @@ exports.profile = function(req, res) {
 };
 
 exports.loginGet = function(req, res) {
-  res.render("user/login");
+  res.render("user/login", { title: "Log in" });
 };
 
 exports.loginPost = function(req, res) {
