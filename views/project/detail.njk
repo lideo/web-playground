@@ -13,21 +13,29 @@
 
         <div class="columns">
             <div class="column">
-                <div class="tabs">
-                    <ul>
-                        <li class="is-active"><a>HTML</a></li>
-                        <li><a>CSS</a></li>
-                        <li><a>JavaScript</a></li>
-                    </ul>
-                </div>
-                <div class="tab-content">
-                    <textarea name="html_code" id="html_code">{{ project.html_code if undefined !== project }}</textarea>
-                </div>
-                <div class="tab-content">
-                    <textarea name="css_code" id="css_code">{{ project.css_code if undefined !== project }}</textarea>
-                </div>
-                <div class="tab-content">
-                    <textarea name="js_code" id="js_code">{{ project.js_code if undefined !== project }}</textarea>
+                <div class="project-tabs" data-controller="project-tabs">
+                    <div class="tabs">
+                        <ul>
+                            <li class="is-active">
+                                <a data-action="project-tabs#html" data-target="project-tabs.tab" data-tab-index="html">HTML</a>
+                            </li>
+                            <li>
+                                <a data-action="project-tabs#css" data-target="project-tabs.tab" data-tab-index="css">CSS</a>
+                            </li>
+                            <li>
+                                <a data-action="project-tabs#js" data-target="project-tabs.tab" data-tab-index="js">JavaScript</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="html">
+                        <textarea name="html_code" id="html_code">{{ project.html_code if undefined !== project }}</textarea>
+                    </div>
+                    <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="css">
+                        <textarea name="css_code" id="css_code">{{ project.css_code if undefined !== project }}</textarea>
+                    </div>
+                    <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="js">
+                        <textarea name="js_code" id="js_code">{{ project.js_code if undefined !== project }}</textarea>
+                    </div>
                 </div>
             </div>
             <div class="column">

@@ -47,7 +47,9 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+
+const staticAssetsPath = path.join(__dirname, "client/dist");
+app.use("/static", express.static(staticAssetsPath));
 
 app.use(session);
 app.use(passport.initialize());

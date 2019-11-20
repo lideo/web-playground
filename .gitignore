@@ -163,3 +163,5 @@ fabric.properties
 .env*
 command.txt
 populatedb.js
+
+dist
