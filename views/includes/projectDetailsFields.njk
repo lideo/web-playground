@@ -7,10 +7,12 @@
 {% endif %}
 
 <form method="post" action="">
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="title" class="form-control" placeholder='Name of project' name='name' required='true'
+    <div class="field">
+        <label class="label is-medium"  for="name">Name</label>
+        <div class="control">
+            <input type="text" id="title" class="input" placeholder='Name of project' name='name' required='true'
                value="{{ project.name if undefined !== project }}">
+        </div>
     </div>
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <button class="button is-primary is-fullwidth" type="submit">Submit</button>
 </form>
