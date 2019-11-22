@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
-    <title>{{ title }}</title>
+{% include "layout/head.njk" %}
 
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-
-    <link rel="stylesheet" href="/static/css/main.css">
-</head>
-<body>
 {% include "includes/navbar.njk" %}
 <main role="main" aria-label="main content">
     <div class="container is-fluid">
@@ -18,7 +7,4 @@
     </div>
 </main>
 
-<script src="/static/js/main.js"></script>
-
-</body>
-</html>
+{% include "layout/foot.njk" %}

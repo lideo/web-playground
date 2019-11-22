@@ -1,47 +1,43 @@
-{% extends "layout/main.njk" %}
+{% extends "layout/project.njk" %}
 
 {% block content %}
-    <h1 class="title">{{ title }}</h1>
-    <p class="subtitle">by <a href="{{ project.user.url }}">{{ project.user.full_name }}</a></p>
+    <div class="project-content is-fullheight">
+        {% include "../includes/form-errors.njk" %}
 
-    {% include "../includes/form-errors.njk" %}
+        <form method="post" action="">
+            {% include "includes/navbar-project.njk" %}
 
-    <form method="post" action="">
-        <div class="buttons">
-            <button class="button is-primary is-small" type="submit">Save</button>
-        </div>
-
-        <div class="columns">
-            <div class="column">
-                <div class="project-tabs" data-controller="project-tabs">
-                    <div class="tabs">
-                        <ul>
-                            <li class="is-active">
-                                <a data-action="project-tabs#html" data-target="project-tabs.tab" data-tab-index="html">HTML</a>
-                            </li>
-                            <li>
-                                <a data-action="project-tabs#css" data-target="project-tabs.tab" data-tab-index="css">CSS</a>
-                            </li>
-                            <li>
-                                <a data-action="project-tabs#js" data-target="project-tabs.tab" data-tab-index="js">JavaScript</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="html">
-                        <textarea name="html_code" id="html_code">{{ project.html_code if undefined !== project }}</textarea>
-                    </div>
-                    <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="css">
-                        <textarea name="css_code" id="css_code">{{ project.css_code if undefined !== project }}</textarea>
-                    </div>
-                    <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="js">
-                        <textarea name="js_code" id="js_code">{{ project.js_code if undefined !== project }}</textarea>
+            <div class="columns">
+                <div class="column">
+                    <div class="project-tabs" data-controller="project-tabs">
+                        <div class="tabs">
+                            <ul>
+                                <li class="is-active">
+                                    <a data-action="project-tabs#html" data-target="project-tabs.tab" data-tab-index="html">HTML</a>
+                                </li>
+                                <li>
+                                    <a data-action="project-tabs#css" data-target="project-tabs.tab" data-tab-index="css">CSS</a>
+                                </li>
+                                <li>
+                                    <a data-action="project-tabs#js" data-target="project-tabs.tab" data-tab-index="js">JavaScript</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="html">
+                            <textarea name="html_code" id="html_code">{{ project.html_code if undefined !== project }}</textarea>
+                        </div>
+                        <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="css">
+                            <textarea name="css_code" id="css_code">{{ project.css_code if undefined !== project }}</textarea>
+                        </div>
+                        <div class="tab-content" data-target="project-tabs.tabContent" data-tab-index="js">
+                            <textarea name="js_code" id="js_code">{{ project.js_code if undefined !== project }}</textarea>
+                        </div>
                     </div>
                 </div>
+                <div class="column">
+                    <iframe src={{ project.previewUrl }} width="100%" height="400px"></iframe>
+                </div>
             </div>
-            <div class="column">
-                <iframe src={{ project.previewUrl }} width="100%" height="400px"></iframe>
-            </div>
-        </div>
-    </form>
-
+        </form>
+    </div>
 {% endblock %}
