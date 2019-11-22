@@ -1,13 +1,26 @@
 {% extends "layout/main.njk" %}
 
 {% block content %}
-    <h1 class="title">{{ title }}: {{ project.name }}</h1>
+    <div class="columns">
+        <div class="column is-one-third is-offset-one-third">
+            <h1 class="title">{{ title }}</h1>
+            <p class="subtitle">You are about to delete: {{ project.name }}</p>
 
-    <p>Do you really want to delete this project?</p>
+            <div class="notification">
+                <p>Do you really want to delete this project? <strong>This cannot be undone</strong>.</p>
+            </div>
 
-    <form method="post" action="">
-        <input type="hidden" name="projectid" value={{ project._id }}>
-        <button class="button is-danger" type="submit">Delete</button>
-    </form>
+            <form method="post" action="">
+                <input type="hidden" name="projectid" value={{ project._id }}>
+                <div class="field">
+                    <button class="button is-danger is-pulled-left" type="submit">Delete</button>
+                </div>
+                <div class="field">
+                    <a href="{{ project.url }}" class="button is-pulled-right">Don't delete!</a>
+                </div>
 
+            </form>
+
+        </div>
+    </div>
 {% endblock %}
