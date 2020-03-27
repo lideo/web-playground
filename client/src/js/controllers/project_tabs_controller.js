@@ -1,5 +1,7 @@
 import { Controller } from "stimulus";
 
+import editors from "../createEditors";
+
 export default class extends Controller {
   static targets = ["tab", "tabContent"];
 
@@ -35,5 +37,8 @@ export default class extends Controller {
         el.getAttribute("data-tab-index") === this.tab
       );
     });
+
+    editors[this.tab].refresh();
+    editors[this.tab].focus();
   }
 }

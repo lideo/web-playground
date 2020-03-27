@@ -167,3 +167,4 @@ populatedb.js
 dist
 
 .history/
+.vscode/

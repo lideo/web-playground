@@ -27,6 +27,28 @@ module.exports = {
         loader: "babel-loader"
       },
       {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: "postcss-loader", // Run post css actions
+            options: {
+              sourceMap: true,
+              plugins: function() {
+                // post css plugins, can be exported to postcss.config.js
+                return [require("autoprefixer")];
+              }
+            }
+          }
+        ]
+      },
+      {
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
