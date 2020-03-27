@@ -165,3 +165,5 @@ command.txt
 populatedb.js
 
 dist
+
+.history/
