@@ -86,6 +86,13 @@ exports.projectDetailPost = [
     });
 
     if (!errors.isEmpty()) {
+      if (req.accepts(["json", "html"]) == "json") {
+        const err = new Error("Error while saving project.");
+        err.status = 400;
+        res.send("Error", err.message);
+        return;
+      }
+
       res.render("project/detail", {
         title: project.name,
         project: project,
@@ -103,9 +110,19 @@ exports.projectDetailPost = [
         if (updatedProject == null) {
           const err = new Error("Project not found.");
           err.status = 404;
+
+          if (req.accepts(["json", "html"]) == "json") {
+            res.send("Error", err.message);
+            return;
+          }
+
           return next(err);
         }
 
+        if (req.accepts(["json", "html"]) == "json") {
+          res.send("Project saved!");
+          return;
+        }
         res.redirect(updatedProject.url);
       } catch (err) {
         return next(err);

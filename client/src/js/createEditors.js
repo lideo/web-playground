@@ -2,7 +2,9 @@ import createEditor from "./playgroundEditor";
 
 const onSave = function() {
   // eslint-disable-next-line no-console
-  console.log("Saved...");
+  console.log("Saving...");
+
+  document.getElementById("save-project").click();
 };
 
 const jsCodeContainer = document.getElementById("js_code");
