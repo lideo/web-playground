@@ -61,6 +61,10 @@ app.use(function(req, res, next) {
   next();
 });
 
+const graphqlServer = require("./graphql/server");
+// Enable access to GraphQL Playround on route "/__graphql"
+graphqlServer.applyMiddleware({ app, path: "/__graphql" });
+
 app.use("/favicon.ico", function(req, res) {
   res.type("image/x-icon");
   res.status(301);
