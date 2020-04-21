@@ -1,41 +1,28 @@
+"use strict";
+
 // Import styles
 import "../scss/main.scss";
 
-// Set up Stimulus
-import { Application } from "stimulus";
-import { definitionsFromContext } from "stimulus/webpack-helpers";
+import React from "react";
+import ReactDOM from "react-dom";
 
-const application = Application.start();
-const context = require.context("./controllers", true, /\.js$/);
-application.load(definitionsFromContext(context));
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
+import Project from "./components/Project";
 
-const form = document.getElementById("project-form");
-form.addEventListener("submit", event => {
-  event.preventDefault();
+const domContainer = document.querySelector("#project-editor");
+const projectId = domContainer.dataset.id;
 
-  const formData = new FormData(form);
-  const values = {};
-  for (var pair of formData.entries()) {
-    values[pair[0]] = pair[1];
-  }
-
-  fetch(form.getAttribute("action"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
-    body: JSON.stringify(values)
-  })
-    .then(response => response.text())
-    .then(response => {
-      console.log("Success:", response);
-
-      document
-        .getElementById("project-preview")
-        .contentWindow.location.reload();
-    })
-    .catch(error => {
-      console.error("Error:", error);
-    });
+const client = new ApolloClient({
+  uri: "http://localhost:3000/__graphql"
 });
+
+const App = () => (
+  <ApolloProvider client={client}>
+    <div>
+      <Project projectId={projectId} />
+    </div>
+  </ApolloProvider>
+);
+
+domContainer ? ReactDOM.render(<App />, domContainer) : false;
